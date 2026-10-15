@@ -1,0 +1,112 @@
+# Job Autopilot — job scanner settings (portals.yml)
+#
+# USER LAYER: copied here by `node autopilot/setup.mjs`, never auto-updated.
+# This is "what to look for and where". Four sections:
+#   1. Role keywords   (title_filter)       — which job titles count
+#   2. Locations       (location_filter)    — where you can work
+#   3. Companies       (tracked_companies)  — boards scanned on every run
+#   4. Broad searches  (search_queries)     — web searches across job boards
+#
+# Easiest path: say "set me up" (step 3) or "add companies: A, B, C" and the
+# agent finds each company's job board for you with the discover mode.
+# Every option, and 45+ ready-made companies: templates/portals.example.yml
+#
+# <<FILL: replace the example roles, locations and companies below with yours>>
+
+scan_history:
+  recheck_after_days: 30
+
+# -- 1. Role keywords --------------------------------------------------------
+# A title passes if it contains ANY positive keyword and NO negative keyword.
+# "A + B" means both words must appear. "word:X" matches X as a whole word
+# (so "word:Intern" doesn't block "International").
+title_filter:
+  positive:
+    # Replace these examples with your own role families.
+    - "Strategy & Operations"
+    - "Strategy and Operations"
+    - "Business Operations"
+    - "Chief of Staff"
+    - "Strategy Manager"
+    - "Product Manager"
+    - "Program Manager"
+  negative:
+    - "Junior"
+    - "word:Intern"
+    - "Internship"
+    - "Recruiter"
+    - "Account Executive"
+    - "word:VP"
+  seniority_boost:
+    - "Senior"
+    - "Lead"
+    - "Manager"
+
+# -- 2. Locations ------------------------------------------------------------
+# always_allow wins over block_hard. A posting with no location passes.
+location_filter:
+  always_allow:
+    - "United States"
+  allow:
+    - "Remote"
+    - "New York"
+    - "San Francisco"
+    - "Seattle"
+    - "Chicago"
+    - "Austin"
+  block_hard:
+    - "India"
+    - "Germany"
+
+# -- 3. Companies ------------------------------------------------------------
+# Three kinds of entry:
+#   a) API board (Greenhouse / Lever / Ashby / Workday ...): free, exact, runs
+#      in the scheduled scan with zero tokens. Prefer this.
+#   b) websearch: for companies without an API board. Costs a web search, so
+#      list these under "Priority companies for web search" in modes/_custom.md.
+#   c) enabled: false — kept for reference, not scanned.
+# Put your priority and any work-authorization note in `notes`; the agent
+# reads them when it ranks roles.
+tracked_companies:
+
+  # a) API boards (examples — replace with your targets)
+  - name: Anthropic
+    careers_url: https://job-boards.greenhouse.io/anthropic
+    api: https://boards-api.greenhouse.io/v1/boards/anthropic/jobs
+    notes: "Example. P1."
+    enabled: true
+
+  - name: DoorDash
+    careers_url: https://job-boards.greenhouse.io/doordashusa
+    api: https://boards-api.greenhouse.io/v1/boards/doordashusa/jobs
+    notes: "Example. P1."
+    enabled: true
+
+  - name: Faire
+    careers_url: https://job-boards.greenhouse.io/faire
+    api: https://boards-api.greenhouse.io/v1/boards/faire/jobs
+    notes: "Example. P2."
+    enabled: true
+
+  # b) web search (no API board)
+  - name: Uber
+    careers_url: https://www.uber.com/global/en/careers/
+    scan_method: websearch
+    scan_query: 'site:uber.com/global/en/careers "Strategy" OR "Operations"'
+    notes: "Example. P2. Web search: add to the priority list in modes/_custom.md."
+    enabled: true
+
+  # c) parked
+  - name: Instacart
+    careers_url: https://job-boards.greenhouse.io/instacart
+    api: https://boards-api.greenhouse.io/v1/boards/instacart/jobs
+    notes: "Example of a parked company."
+    enabled: false
+
+# -- 4. Broad searches -------------------------------------------------------
+# Web searches across public ATS boards, run by the agent during "scan".
+# Keep a few focused queries; each one costs a web search.
+search_queries:
+  - name: ATS boards — Strategy & Operations (US)
+    query: 'site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com "Strategy & Operations" OR "Business Operations" "United States" OR "Remote"'
+    enabled: true

@@ -1,0 +1,23 @@
+<!--
+  education.html — onepage pack:
+    line 1: INSTITUTION (caps, bold sans) ............ Location
+    line 2: *Degree* (bold italic sans)   ............ Dates
+    bullet: description (e.g. "Honors: ...")
+  Payload mapping: org = institution, title = degree, year = dates.
+-->
+<!--ENTRY-->
+<div class="edu-item">
+  <div class="edu-row">
+    <span class="edu-org">{{ORG}}</span>
+    <span class="edu-location">{{LOCATION}}</span>
+  </div>
+  <div class="edu-row">
+    <span class="edu-title">{{TITLE}}</span>
+    <span class="edu-year">{{YEAR}}</span>
+  </div>
+  {{DESC_BLOCK}}
+</div>
+<!--ORG_BLOCK--><!--/ORG_BLOCK-->
+<!--LOCATION_BLOCK--><!--/LOCATION_BLOCK-->
+<!--DESC_BLOCK--><ul><li class="edu-desc">{{DESC}}</li></ul><!--/DESC_BLOCK-->
+<!--/ENTRY-->

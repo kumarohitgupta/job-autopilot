@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!-- career-ops-template
+name: One Page Classic
+version: 1.0.0
+sections: all
+-->
+<html lang="{{LANG}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{NAME}} — CV</title>
+<style>
+  /* onepage pack — a classic one-page US/UK business resume:
+       - Times New Roman body, letter size, ONE page
+       - centred bold name, bold grey headline, centred contact line
+       - ALL-CAPS bold section titles with a thin rule above each section
+       - section order: Summary (+ Core Skills / Tools line), Work Experience,
+         Education, Additional. A student or recent grad who leads with
+         Education: swap those two blocks in a copy of this pack (keep cv.md
+         in the same order, or the PDF order guard stops the render)
+       - experience line: *Role*, **Company** ........ Location | Dates
+       - education lines in bold sans (Calibri), institution in caps
+     ATS discipline kept from the ATS pack: system fonts, ligatures off. */
+
+  :root {
+    --font-family: "Times New Roman", "Liberation Serif", Times, serif;
+    --sans-family: Calibri, Carlito, "Helvetica Neue", Arial, sans-serif;
+    --font-size: 10.5pt;
+    --page-margin: 0.45in;
+    --job-break-inside: avoid;
+    --project-break-inside: auto;
+    --rule: #8a8a8a;
+  }
+  @page { size: letter; margin: var(--page-margin); }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "clig" 0, "dlig" 0;
+  }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    line-height: 1.14;
+    color: #000;
+    background: #fff;
+  }
+  .page { max-width: {{PAGE_WIDTH}}; margin: 0 auto; background: #fff; }
+  a { color: #000; text-decoration: none; }
+
+  /* === HEADER === */
+  .header { text-align: center; padding-bottom: 4px; }
+  .header h1 { font-size: 16pt; font-weight: bold; line-height: 1.15; }
+  .header-title { font-size: 10.6pt; font-weight: bold; color: #555; margin-top: 1px; }
+  .contact-row {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    margin-top: 1px;
+  }
+  .contact-row > * { white-space: nowrap; }
+  /* Original order: Location | email | phone | LinkedIn */
+  .contact-row > span { order: 1; }
+  .contact-row > a[href^="mailto:"] { order: 2; }
+  .contact-row > a[href^="tel:"] { order: 3; }
+  .contact-row > a[href^="http"] { order: 4; }
+  .contact-row > *:not(:last-child)::after { content: "\00a0|\00a0"; color: #000; text-decoration: none; display: inline-block; }
+  /* Reordered row: the location span (last in DOM, first on screen) needs a
+     separator; the LinkedIn link (last on screen) does not. */
+  .contact-row > span::after { content: "\00a0|\00a0"; color: #000; display: inline-block; }
+  .contact-row > a[href^="http"]::after { content: ""; }
+  .contact-row a[href^="http"], .contact-row a[href^="mailto:"] { color: #1a0dab; text-decoration: underline; }
+
+  /* === SECTIONS === */
+  .section { border-top: 0.75px solid var(--rule); padding-top: 3px; margin-top: 4px; }
+  .section-title {
+    font-size: 12pt; font-weight: bold; text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+  .summary-text { text-align: left; }
+  .skills-line { margin-top: 1px; }
+  .skills-grid { display: inline; }
+  .skill-item { display: inline; }
+  .skill-item + .skill-item::before { content: " | "; }
+  .skill-category { font-weight: bold; font-style: italic; }
+
+  /* === EDUCATION === */
+  .edu-item { margin-bottom: 2px; }
+  .edu-row { display: flex; justify-content: space-between; gap: 12px; }
+  .edu-org { font-family: var(--sans-family); font-weight: bold; text-transform: uppercase; }
+  .edu-title { font-family: var(--sans-family); font-weight: bold; font-style: italic; }
+  .edu-location, .edu-year { white-space: nowrap; }
+
+  /* === EXPERIENCE === */
+  .job { margin-bottom: 1px; }
+  .job-header { display: flex; justify-content: space-between; gap: 12px; }
+  .job-role { font-weight: bold; font-style: italic; }
+  .job-company { font-weight: bold; }
+  .job-period { white-space: nowrap; }
+
+  ul { padding-left: 38px; margin: 0; }
+  li { list-style: disc; margin: 0; padding-left: 2px; }
+  li::marker { font-size: 8pt; }
+  .edu-desc { font-style: normal; }
+
+  /* === ADDITIONAL (awards partial) === */
+  .award-title { font-style: italic; }
+
+  /* === PAGE BREAK CONTROL === */
+  .header, .edu-item { break-inside: avoid; page-break-inside: avoid; }
+  .job { break-inside: var(--job-break-inside, avoid); page-break-inside: var(--job-break-inside, avoid); }
+  .section-title, .job-header { break-after: avoid; page-break-after: avoid; }
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  {{PHOTO}}
+  <!-- HEADER -->
+  <div class="header">
+    <h1>{{NAME}}</h1>
+    {{TITLE_BLOCK}}
+    <div class="contact-row">
+      <a href="tel:{{PHONE}}">{{PHONE}}</a>
+      <a href="mailto:{{EMAIL}}">{{EMAIL}}</a>
+      <a href="{{LINKEDIN_URL}}">{{LINKEDIN_DISPLAY}}</a>
+      <a href="{{PORTFOLIO_URL}}">{{PORTFOLIO_DISPLAY}}</a>
+      <span>{{LOCATION}}</span>
+    </div>
+  </div>
+
+  <!-- PROFESSIONAL SUMMARY -->
+  <div class="section">
+    <div class="section-title">{{SECTION_SUMMARY}}</div>
+    <div class="summary-text">{{SUMMARY_TEXT}}</div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="skills-line">{{SKILLS}}</div>
+
+  <!-- WORK EXPERIENCE -->
+  <div class="section">
+    <div class="section-title">{{SECTION_EXPERIENCE}}</div>
+    {{EXPERIENCE}}
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="section">
+    <div class="section-title">{{SECTION_EDUCATION}}</div>
+    {{EDUCATION}}
+  </div>
+
+  <!-- AWARDS -->
+  <div class="section">
+    <div class="section-title">{{SECTION_AWARDS}}</div>
+    <ul class="additional">{{AWARDS}}</ul>
+  </div>
+
+  <!-- END -->
+  <div class="cv-consent">{{CONSENT}}</div>
+</div>
+</body>
+</html>

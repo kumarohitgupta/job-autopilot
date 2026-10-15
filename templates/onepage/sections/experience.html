@@ -1,0 +1,18 @@
+<!--
+  experience.html — onepage pack:
+    line 1: *Role*, **Company**  ............  Location | Dates
+    then bullets. CONTEXT is intentionally not rendered (kept out of this layout).
+-->
+<!--ENTRY-->
+<div class="job">
+  <div class="job-header">
+    <span class="job-lead"><span class="job-role">{{ROLE}}</span>, <span class="job-company">{{COMPANY}}</span></span>
+    <span class="job-period">{{LOCATION_BLOCK}}{{PERIOD}}</span>
+  </div>
+  <ul>
+    {{BULLETS}}
+  </ul>
+</div>
+<!--LOCATION_BLOCK--><span class="job-location">{{LOCATION}}</span> | <!--/LOCATION_BLOCK-->
+<!--CONTEXT_BLOCK--><!--/CONTEXT_BLOCK-->
+<!--/ENTRY-->
