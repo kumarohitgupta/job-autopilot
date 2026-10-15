@@ -22,7 +22,7 @@ Read these before every workflow below. A value still shown as `<<FILL: ...>>` m
 
 - **File name prefix:** <<FILL: First_Last, e.g. Jane_Doe>> (PDFs are saved as `output/<prefix>_Resume_<Company>.pdf` and `output/<prefix>_Cover_<Company>.pdf`)
 - **Queue backend:** <<FILL: sheets or local>>
-  - `sheets`: Google Sheet with tabs `Agent Queue` and `Tracker` (import the headers from `autopilot/google-sheet/`). Needs a Google Sheets tool (Claude Code: the Google Sheets connector, visible in `/mcp`).
+  - `sheets`: Google Sheet with tabs `Agent Queue` and `Tracker` (import `autopilot/google-sheet/Job_Autopilot_Tracker_Template.xlsx`). Needs a Google Sheets tool (Claude Code: the Google Sheets connector, visible in `/mcp`).
   - `local`: no Google account needed. The Agent Queue is `data/agent-queue.csv` and the tracker is career-ops' own `data/applications.md`.
 - **Google Sheet ID:** <<FILL: the long ID in the sheet's URL, or "none">>
 - **Google Drive links:** <<FILL: on or off>> (`on` = Google Drive for desktop syncs the `output/` folder and the agent puts Drive links in the queue; `off` = local file paths)
@@ -72,7 +72,7 @@ Ask, then fill `config/profile.yml`, `modes/_profile.md` and `modes/_brief.md` (
 - Build the one-page master resume payload `data/master-resume-payload.json` from `cv.md` (the JSON schema in `modes/pdf.md`): my best bullets, fitting one page, fact-checked with `node verify-cv-facts.mjs`.
 
 **Step 5 — Queue and schedule.**
-- Ask: Google Sheet or local queue? For a sheet: tell me to create a Google Sheet, import `autopilot/google-sheet/Agent Queue.csv` and `Tracker.csv` as two tabs, and add a dropdown on Agent Queue column K with the values `Ready – review`, `Fill application`, `Form filled – review & submit`, `Applied`, `Skip`. Fill the Autopilot Settings above.
+- Ask: Google Sheet or local queue? For a sheet: tell me to create a Google Sheet and import `autopilot/google-sheet/Job_Autopilot_Tracker_Template.xlsx` (File → Import → Upload → Replace spreadsheet). It has the `Agent Queue` and `Tracker` tabs with dropdowns and colors ready. Offer to rename the Tracker's Lane dropdown values to my lanes. Fill the Autopilot Settings above.
 - Paste one real job URL and run it end to end so I can check the score, the PDF and the letter.
 - Offer the schedule: `./autopilot/install-schedule.sh` (macOS launchd or Linux cron, weekdays 7:45 by default).
 
@@ -121,12 +121,12 @@ Run `apply` mode on the posting, fill every field from my files, then STOP and s
 
 Local backend: nothing more to do, `data/applications.md` is the tracker.
 
-Sheets backend: update the `Tracker` tab after any status change. Columns: A #, B Lane, C Company, D Category, E Target role, F Office(s), G Priority, H Application window, I Work authorization / sponsorship, J Contacts, K Networking status, L Application Status, M Date Applied, N Next Action, O Next Action Due, P Notes.
-- Read `Tracker!A1:P300`, find the row whose column C matches the company (case-insensitive; prefer a row whose status isn't `Rejected`).
-- Status mapping (column L): career-ops `Applied` → `Applied`; `Responded` / `Assessment` / `Interview` → `Interviewing`; `Offer` / `Hired` → `Offer`; `Rejected` → `Rejected`; `Discarded` → `Dropped`.
-- On Applied: M = today as "Mon D, YYYY"; N = "Follow up on application + find referral"; O = today + 7 days, same format; append to P (never overwrite): "{Mon D}: applied {role} via autopilot ({score}/5)".
-- No row for the company: write one into the first empty row with the next #, the lane, company, role, office, priority "P3", status and dates as above.
-- Never change columns I-K (those are mine). Show me the row before and after.
+Sheets backend: update the `Tracker` tab after any status change. Columns: A #, B Lane, C Company, D Category, E Target Role / Practice, F Target Office(s), G Priority, H Application Window, I Work Authorization / Sponsorship, J Sponsorship Evidence, K Networking Contact 1, L Contact 1 Status, M Networking Contact 2, N Contact 2 Status, **O Application Status**, **P Date Applied**, **Q Next Action**, **R Next Action Due**, **S Notes**.
+- Read `Tracker!A1:S300`, find the row whose column C matches the company (case-insensitive; prefer a row whose status isn't `Rejected`).
+- Status mapping (column O, use these exact dropdown values): career-ops `Applied` → `Applied`; `Responded` / `Assessment` / `Interview` → `Interviewing`; `Offer` / `Hired` → `Offer`; `Rejected` → `Rejected`; `Discarded` → `Dropped`.
+- On Applied: P = today as "Mon D, YYYY"; Q = "Follow up on application + find referral"; R = today + 7 days, same format; append to S (never overwrite): "{Mon D}: applied {role} via autopilot ({score}/5)".
+- No row for the company: write one into the first empty row with the next #, B lane (a value from its dropdown), C company, D category, E role, F office, G "P3", I "Not checked", O status, and P-S as above.
+- Write only columns O-S (plus the new-company row). Never change columns I-N: work authorization and networking are mine. Show me the row before and after.
 
 ### "pull tracker"
 

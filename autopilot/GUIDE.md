@@ -52,7 +52,7 @@ Say `skip` to leave any step for later, and `set up <area>` to come back to it.
 
 ## 3. Choose where your queue lives
 
-**Google Sheet (recommended with Claude Code).** Create a Google Sheet and import the two files in `autopilot/google-sheet/` as tabs named `Agent Queue` and `Tracker`. On `Agent Queue` column K, add a dropdown with `Ready – review`, `Fill application`, `Form filled – review & submit`, `Applied`, `Skip`. Connect Google Sheets (and optionally Google Drive) to Claude at claude.ai → Settings → Connectors. In Claude Code, `/mcp` should list them. Put the sheet's ID in `modes/_custom.md` → Autopilot Settings.
+**Google Sheet (recommended with Claude Code).** Create a blank Google Sheet, then File → Import → Upload `autopilot/google-sheet/Job_Autopilot_Tracker_Template.xlsx` → **Replace spreadsheet**. You get three tabs: Instructions, `Agent Queue` (with the Status dropdown and row colors) and `Tracker` (with dropdowns for Lane, Priority, Work Authorization, contact status and Application Status). Keep the tab names. Rename the Lane dropdown values to your own lanes. You can also open the file in Excel or Numbers to look at it. Connect Google Sheets (and optionally Google Drive) to Claude at claude.ai → Settings → Connectors. In Claude Code, `/mcp` should list them. Put the sheet's ID in `modes/_custom.md` → Autopilot Settings.
 
 > Claude Code only loads claude.ai connectors when you're signed in with your subscription. If `echo $ANTHROPIC_API_KEY` prints a key, remove it from your shell profile.
 
